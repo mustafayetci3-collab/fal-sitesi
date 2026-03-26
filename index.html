@@ -5,73 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alanya Su Falı - Sena Bacı</title>
     <style>
-        body { 
-            background: radial-gradient(circle, #001529 0%, #000000 100%); 
-            color: #e0f7fa; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; margin: 0; overflow: hidden;
-        }
-        .container { 
-            background: rgba(0, 30, 60, 0.8); 
-            padding: 40px; border-radius: 30px; 
-            box-shadow: 0 0 50px #00d2ff; 
-            max-width: 500px; width: 90%; text-align: center;
-            border: 1px solid #00d2ff;
-        }
-        h1 { font-size: 2.5rem; text-shadow: 2px 2px 10px #00d2ff; margin-bottom: 10px; }
-        p { font-style: italic; color: #81d4fa; }
-        input { 
-            width: 100%; padding: 15px; margin: 20px 0; 
-            border-radius: 15px; border: 1px solid #00d2ff; 
-            background: rgba(255,255,255,0.1); color: white; font-size: 1rem;
-        }
-        button { 
-            background: #00d2ff; color: #001529; 
-            padding: 15px 30px; border: none; border-radius: 50px; 
-            font-weight: bold; font-size: 1.2rem; cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover { transform: scale(1.05); box-shadow: 0 0 20px #fff; }
-        #sonuc { 
-            margin-top: 30px; min-height: 80px; 
-            font-size: 1.3rem; line-height: 1.6; color: #fff;
-            text-shadow: 1px 1px 5px #000;
-        }
-        .wave { font-size: 3rem; margin-bottom: 10px; }
+        body { background: radial-gradient(circle, #001529 0%, #000000 100%); color: #e0f7fa; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: rgba(0, 30, 60, 0.8); padding: 40px; border-radius: 30px; box-shadow: 0 0 50px #00d2ff; max-width: 500px; width: 90%; text-align: center; border: 1px solid #00d2ff; }
+        h1 { text-shadow: 2px 2px 10px #00d2ff; }
+        input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 15px; border: 1px solid #00d2ff; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
+        button { background: #00d2ff; color: #001529; padding: 15px 30px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { transform: scale(1.05); }
+        #sonuc { margin-top: 30px; font-size: 1.2rem; line-height: 1.6; color: #fff; min-height: 50px; }
+        .loading { color: #81d4fa; font-style: italic; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="wave">🌊</div>
+        <div class="wave" style="font-size: 3rem;">🌊</div>
         <h1>Alanya Su Falı</h1>
-        <p>Gurban olduğum, niyetini suya fısılda hele...</p>
-        <input type="text" id="soru" placeholder="İçinden geçeni buraya yaz gurban..." autocomplete="off">
-        <button onclick="falBak()">SUYA BAK SENA BACI!</button>
+        <p>Niyetini suya fısılda gurban olduğum...</p>
+        <input type="text" id="soru" placeholder="İçinden geçeni yaz..." autocomplete="off">
+        <br>
+        <button onclick="falBak()">SENA BACI'YA SOR</button>
         <div id="sonuc"></div>
     </div>
 
     <script>
-        function falBak() {
-            const soru = document.getElementById('soru').value;
-            const sonuc = document.getElementById('sonuc');
-            if(!soru) { alert("Niyet etmeden su durulmaz gurbanım!"); return; }
+        async function falBak() {
+            const soruInput = document.getElementById('soru');
+            const sonucDiv = document.getElementById('sonuc');
+            
+            if(!soruInput.value) { alert("Hele bir niyet et gurbanım!"); return; }
 
-            sonuc.innerHTML = "<i>Sena Bacı suya bakıyor, dur hele bir durulun...</i>";
-
-            const cevaplar = [
-                "Bak hele gurban olduğum, suyun dibi tertemiz! Gönlündeki o murat ayağına gelecek, az daha sabret.",
-                "Emmioğlu/Emmikızı, su biraz çalkantılı ama sonunda Alanya güneşi gibi aydınlık var. İçini ferah tut!",
-                "Uzaklardan bir haberin var ki sorma! Kuş kanadında geliyor, müjdeler olsun!",
-                "Seni çekemeyenler var ama suyun bereketi onları boğar. Sen yoluna bak, rızkın açık!",
-                "Hay maşallah! Kısmetin Alanya sahili gibi upuzun, bereketli bir yola giriyorsun gurban.",
-                "Su diyor ki; kafandaki o tilkileri bırak, hayırlı bir kapı açılıyor, gıymatını bil!"
-            ];
-
-            setTimeout(() => {
-                const rastgele = cevaplar[Math.floor(Math.random() * cevaplar.length)];
-                sonuc.innerHTML = "<b>Sena Bacı der ki:</b> <br>" + rastgele;
-            }, 2500);
+            sonucDiv.innerHTML = '<p class="loading">Sena suya bakıyor, dur hele bir durulun...</p>';
+            
+            try {
+                const response = await fetch('/.netlify/functions/fal', {
+                    method: 'POST',
+                    body: JSON.stringify({ soru: soruInput.value })
+                });
+                
+                const data = await response.json();
+                sonucDiv.innerHTML = "<b>Sena Bacı der ki:</b> <br>" + data.cevap;
+            } catch (error) {
+                sonucDiv.innerHTML = "Sena'nın gözleri yoruldu gurban, biraz sonra gel!";
+                console.error(error);
+            }
         }
     </script>
 </body>
