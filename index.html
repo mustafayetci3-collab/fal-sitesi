@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Alanya Su Falı - Sena</title>
+    <style>
+        body { background: #001529; color: #00d2ff; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px; }
+        .box { border: 2px solid #00d2ff; padding: 30px; border-radius: 20px; max-width: 450px; margin: auto; background: rgba(0,0,0,0.7); box-shadow: 0 0 20px #00d2ff; }
+        input { padding: 12px; border-radius: 10px; border: none; width: 85%; margin-top: 15px; font-size: 16px; }
+        button { background: #00d2ff; color: #001529; padding: 12px 25px; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 18px; }
+        button:hover { background: #fff; }
+        #sonuc { margin-top: 25px; font-style: italic; font-size: 20px; line-height: 1.5; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>💧 Alanya Su Falı</h1>
+        <p>Sena Bacı senin için suya bakıyor gurban olduğum...</p>
+        <input type="text" id="soru" placeholder="Niyetini suya fısılda (Örn: Geleceğim...)">
+        <br>
+        <button onclick="falBak()">SUYA SOR</button>
+        <div id="sonuc"></div>
+    </div>
+    <script>
+        function falBak() {
+            const soru = document.getElementById('soru').value;
+            const sonuc = document.getElementById('sonuc');
+            if(!soru) { alert("Önce niyetini yaz gurbanım!"); return; }
+            
+            sonuc.innerText = "Sena suya bakıyor, dur hele bir durulun...";
+            
+            const cevaplar = [
+                "Gönlündeki murat tez zamanda su yüzüne çıkacak, ferahlayacaksın!",
+                "Su biraz bulanık ama sonunda Alanya güneşi gibi aydınlık var, az sabret.",
+                "Kısmetin Alanya sahili gibi upuzun, maşallah bereketli bir yolun var!",
+                "Gözyaşların akıp gidecek, yerine deniz ferahlığı gelecek gurban olduğum.",
+                "Uzaklardan bir haberin var, su öyle berrak ki müjdeyi veriyor!",
+                "Seni çekemeyenler var ama suyun gücü onları boğar, korkma!"
+            ];
+            
+            setTimeout(() => {
+                const rastgele = cevaplar[Math.floor(Math.random() * cevaplar.length)];
+                sonuc.innerText = "Sena der ki: " + rastgele;
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
