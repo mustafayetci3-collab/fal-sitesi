@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -12,8 +13,6 @@
         button { background: #00d2ff; color: #001529; padding: 15px 30px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         button:hover { transform: scale(1.05); }
         #sonuc { margin-top: 30px; font-size: 1.2rem; line-height: 1.6; color: #fff; min-height: 50px; }
-        .loading { color: #81d4fa; font-style: italic; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
@@ -31,14 +30,15 @@
         async function falBak() {
             const soruInput = document.getElementById('soru');
             const sonucDiv = document.getElementById('sonuc');
-            
             if(!soruInput.value) { alert("Hele bir niyet et gurbanım!"); return; }
 
-            sonucDiv.innerHTML = '<p class="loading">Sena suya bakıyor, dur hele bir durulun...</p>';
+            sonucDiv.innerHTML = '<i>Sena suya bakıyor, dur hele bir durulun...</i>';
             
             try {
+                // Bu kısım Netlify'daki gizli fonksiyonumuzla konuşuyor
                 const response = await fetch('/.netlify/functions/fal', {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ soru: soruInput.value })
                 });
                 
@@ -46,7 +46,6 @@
                 sonucDiv.innerHTML = "<b>Sena Bacı der ki:</b> <br>" + data.cevap;
             } catch (error) {
                 sonucDiv.innerHTML = "Sena'nın gözleri yoruldu gurban, biraz sonra gel!";
-                console.error(error);
             }
         }
     </script>
